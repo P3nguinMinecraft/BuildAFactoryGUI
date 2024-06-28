@@ -7,6 +7,7 @@ local ws = game:GetService("Workspace")
 local player = game:GetService("Players").LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local Humanoid = character:WaitForChild("Humanoid")
 local plot, xval, zval
 local traintotal = 0
 local trainfull = false
@@ -406,4 +407,24 @@ spawn(function()
             wait(1)
         end
     end
+end)
+
+-- tools
+spawn(function()
+   while wait(0.01) do
+      if WalkspeedToggleOld == true and WalkspeedToggle == false then
+         Humanoid.WalkSpeed = 16
+      end
+      if WalkspeedToggle then
+         Humanoid.WalkSpeed = Walkspeed
+      end
+      if JumpPowerToggleOld == true and JumpPowerToggle ==false then
+         Humanoid.JumpPower = 50
+      end
+      if JumpPowerToggle then
+         Humanoid.JumpPower = JumpPower
+      end
+      WalkspeedToggleOld = WalkspeedToggle
+      JumpPowerToggleOld = JumpPowerToggle
+   end
 end)
