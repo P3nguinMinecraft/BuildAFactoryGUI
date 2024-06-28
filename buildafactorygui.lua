@@ -363,7 +363,7 @@ local tankdisplay = plotfolder.Core.TankDisplay.SurfaceGui.Amount
 
 -- autocollect
 spawn(function()
-    while wait(autcollectdelay) do
+    while wait(autocollectdelay) do
         if autocollecttoggle then
             game:GetService("ReplicatedStorage"):WaitForChild("Communication"):WaitForChild("SellItems"):InvokeServer()
             game:GetService("ReplicatedStorage"):WaitForChild("Communication"):WaitForChild("CollectSkyIslandTank"):FireServer("Island1")
