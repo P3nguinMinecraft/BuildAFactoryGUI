@@ -11,8 +11,8 @@ local Humanoid = character:WaitForChild("Humanoid")
 local plot, xval, zval
 local traintotal = 0
 local trainfull = false
-local rowCounter = 0
-local mineCounter = 0
+local startedRowCounter = 0
+local minedCounter = 0
 local plotCoordinates = {
     [1] = { xval = -432, zval = -285 },
     [2] = { xval = -781, zval = -285 },
@@ -131,7 +131,7 @@ local AutoMineButton1 = AutoMineTab:CreateButton({
     Name = "Auto Mine",
     Callback = function()
         if autoMineBlock == false then
-            autoMine(autoMineRows)
+            autoMine()
         else
             Rayfield:Notify({
                 Title = "Slow Down!",
@@ -252,6 +252,7 @@ local ToolButton6 = ToolTab:CreateButton({
    end,
 })
 
+print("[BAF] Loading Functions")
 -- functions
 function parseValue(valuestr)
     if not valuestr or valuestr == "" then
@@ -292,42 +293,47 @@ function mineRow(row)
             mineblock(blockString)
             wait(0.2)
         end
-        mineCounter = mineCounter + 1
+        minedCounter = minedCounter + 1
     end)
 end
-
-function teleportController(rowCount)
-    spawn(function()
-        for i = 0, 28 do
-            while mineCounter < rowCount do
-                wait()
-            end
-            zval = zval + (70/29) * rowCount
-            tpto(CFrame.new(xval, 3, zval))
-            wait(0.2)
-            mineCounter = 0
-            rowCounter = 0
+spawn(function()
+    while true do
+        while minedCounter < autoMineRows do -- while not all done
+            wait(0.5)
         end
-    end)
-end
+        for j = 1, autoMineRows do
+            zval = zval + (70/29)
+            tpto(CFrame.new(xval, 3, zval))
+        end
+        wait(0.2) -- tp delay
+        minedCounter = 0
+        startedRowCounter = 0
+    end
+end)
 
-function autoMine(rowCount)
+function autoMine()
     xval = plotCoordinates[plot].xval
     zval = plotCoordinates[plot].zval
     if autoMineBlock == false then
         spawn(function()
             autoMineBlock = true
             tpto(CFrame.new(xval, 3, zval))
-            wait(0.2)
-            teleportController(rowCount)
+            wait(1) -- tp delay
             for n = 0, 28 do
-                while rowCounter >= rowCount do -- assign and start mining rowcount rows
-                    wait()
+                while startedRowCounter >= autoMineRows do -- while all rows started
+                    wait(0.5)
                 end
                 mineRow(n)
-                rowCounter = rowCounter + 1
+                startedRowCounter = startedRowCounter + 1
+            end
+            local extraRows = autoMineRows - startedRowCounter -- add extra when done, because overflow
+            minedCounter = minedCounter + extraRows
+            while minedCounter < autoMineRows do -- while not all done
+                wait(0.5)
             end
             autoMineBlock = false
+            minedCounter = 0
+            startedRowCounter = 0
         end)
     end
 end
@@ -403,7 +409,7 @@ end)
 spawn(function()
     while wait(0.1) do
         if autoMineToggle == true and autoMineBlock == false then
-            autoMine(autoMineRows)
+            autoMine()
             wait(1)
         end
     end
