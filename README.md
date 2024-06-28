@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/P3nguinMinecraft/BuildAFactoryGUI/main/buildaf
 
 ## Features
 #### Auto Collect
-##### Collects money every 10 seconds
+##### Collects all currencies every x seconds
 
 ## Credits
 ### Made using Rayfield, a Roblox GUI library.
